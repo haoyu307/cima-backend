@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -80,5 +82,28 @@ class ProductController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Get product list by filter
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getList(Request $request): JsonResponse
+    {
+        $sku = $request->get('sku');
+        $title = $request->get('title');
+
+        if ($sku && $title) {
+            $product_query = Product::where('sku', 'like', '%' . $sku . '%')->where('title', 'like', '%' . $title . '%');
+        } else if ($sku) {
+            $product_query = Product::where('sku', 'like', '%' . $sku . '%');
+        } else if ($title) {
+            $product_query = Product::where('title', 'like', '%' . $title . '%');
+        } else {
+            return response()->json(Product::get());
+        }
+        return response()->json($product_query->get());
     }
 }

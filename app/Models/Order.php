@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Product extends Model
+class Order extends Model
 {
     use HasFactory;
 
@@ -16,19 +16,15 @@ class Product extends Model
      * @var string[]
      */
     protected $fillable = [
-        'title',
-        'sku',
-        'sell_price',
-        'quantity',
+        // 'user_id',
+        'status',
     ];
 
     /**
-     * The orders
-     * 
-     * @return BelongsToMany
+     * The products of an order
      */
-    public function orders(): BelongsToMany
+    public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Order::class, 'order_products', 'product_id', 'order_id');
+        return $this->belongsToMany(Product::class, 'order_products', 'order_id', 'product_id');
     }
 }
